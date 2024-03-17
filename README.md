@@ -67,6 +67,13 @@ Sigue estos pasos para ejecutar el proyecto en tu entorno local:
   http://localhost
 
   ```
+5. Credenciales Test
+  ```bash
+  
+    user: admin
+    pass: user1234
+
+  ```
   
 
 

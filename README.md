@@ -8,9 +8,8 @@
 <div align="center">
 
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![GitHub Issues](https://img.shields.io/github/issues/tu-usuario/challenge-ml.svg)](https://github.com/tu-usuario/challenge-ml/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/tu-usuario/challenge-ml.svg)](https://github.com/tu-usuario/challenge-ml/pulls)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
+[![GitHub Issues](https://img.shields.io/github/issues/Jenrudrg/challenge-ml.svg)](https://github.com/Jenrudrg/challenge-ml/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/Jenrudrg/challenge-ml.svg)](https://github.com/Jenrudrg/challenge-ml/pulls)
 
 </div>
 
@@ -44,7 +43,7 @@ Sigue estos pasos para ejecutar el proyecto en tu entorno local:
 1. Clona el repositorio del proyecto:
 
   ```bash
-  git clone https://github.com/tu-usuario/challenge-ml.git
+  git clone https://github.com/Jenrudrg/challenge-ml.git
   
   ```
 

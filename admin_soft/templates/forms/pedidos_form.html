@@ -1,0 +1,569 @@
+{%load admin_soft%}
+
+<div class="container">
+
+    <!-- Linea de separación -->
+    <div class="row">
+        <div class="text-center">
+            <span class="text-muted">Datos Generales</span>
+        </div>
+        <hr style="border: 2px solid #4d4d4d;">
+    </div>
+    <!-- Fin Linea de separación -->
+
+    {% if pedidos%}
+        <input type="hidden" name="id_pedido" maxlength="100" required="" id="id_id_pedido" class="form-control" value="{{pedidos.id}}">
+    {%endif%}
+    
+    <div class="row">
+      <div class="col-4">
+        <p>
+            <label for="id_pedidos_no">Pedidos no:</label>
+            <input type="text" name="pedidos_no" maxlength="100" required="" id="id_pedidos_no" class="form-control"
+            {% if pedidos%} value="{{pedidos.pedidos_no}}" {%endif%}>
+        </p>
+      </div>
+      <div class="col-4">
+        <p>
+            <label for="id_fecha">Fecha:</label>
+            <input type="date" class="form-control" name="fecha" required="" id="id_fecha"
+            {% if pedidos%} value="{{pedidos.fecha|date:'Y-m-d'}}" {%endif%}>
+        </p>
+      </div>
+      <div class="col-4">
+        <p>
+            <label for="id_contratos">Contrato:</label>
+            <select name="contratos" class="form-control form-select" id="id_contratos">
+                {% for contrato in contratos %}
+                    <option value="{{ contrato.id }}" {% if pedidos%}{% if pedidos.contrato.no_contrato == contrato.no_contrato %} selected {%endif%}{%endif%}>{{ contrato.no_contrato }}</option>
+                {% endfor %}
+            </select>
+        </p>
+    </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <p>
+                <label for="id_proveedores">Proveedor:</label>
+                <select name="proveedores" class="form-control form-select" required="" id="id_proveedores">
+                    {% for proveedor in proveedores %}
+                        <option value="{{ proveedor.id }}" {% if pedidos%}{% if pedidos.proveedor.razon_social == proveedor.razon_social %} selected {%endif%}{%endif%}>{{ proveedor.razon_social }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+        </div>
+        <div class="col-6">
+            <p>
+                <label for="id_sistemas">Sistema:</label>
+                <select name="sistema" class="form-control form-select" required="" id="id_sistemas">
+                    {% for sistema in sistemas %}
+                        <option value="{{ sistema.id }}" {% if pedidos%}{% if pedidos.sistema.sistema == sistema.sistema %} selected {%endif%}{%endif%}>{{ sistema.sistema }}</option>
+                    {% endfor %}
+                </select>
+
+            </p>
+        </div>
+    </div>
+
+    {% if pedidos%}
+    <div class="row">
+        <div class="col">
+          <p>
+              <label for="id_sub_total">Sub Total:</label>
+              <input type="number" name="sub_total" maxlength="100" disabled id="id_sub_total" class="form-control"
+               value="{{pedidos.sub_total | floatformat:'2u' }}">
+          </p>
+        </div>
+        <div class="col">
+          <p>
+              <label for="id_total">Total:</label>
+              <input type="number" class="form-control" name="total" disabled id="id_total"
+              value="{{pedidos.total | floatformat:'2u' }}">
+          </p>
+        </div>
+        <div class="col">
+            <p>
+                <label for="id_usd">Total Usd:</label>
+                <input type="number" class="form-control" name="usd"  required="" id="id_usd"
+                value="{{pedidos.usd | floatformat:'2u' }}">
+            </p>
+          </div>
+        <div class="col">
+            <p>
+                <label for="id_estatus">Estatus:</label>
+                <select name="estatus" class="form-control form-select" required="" id="id_estatus">
+                        <option {%if pedidos.estatus == 'Pendiente Autorización'%} selected {%endif%} value="Pendiente Autorización">Pendiente Autorización</option>
+                        <option {%if pedidos.estatus == 'Pendiente Pago'%} selected {%endif%} value="Pendiente Pago">Pendiente Pago</option>
+                        <option {%if pedidos.estatus == 'Pagado'%} selected {%endif%} value="Pagado">Pagado</option>
+                        <option {%if pedidos.estatus == 'Cancelado'%} selected {%endif%} value="Cancelado">Cancelado</option>
+                </select>
+            </p>
+          </div>
+      </div>
+      {%endif%}
+    
+    <!-- Linea de separación -->
+    <div class="row">
+        <hr>
+        <div class="text-center" style="background-color: white;">
+            <span class="text-muted">Datos de Embarque</span>
+        </div>
+        <hr style="border: 2px solid #4d4d4d;">
+    </div>
+    <!-- Fin Linea de separación -->
+
+    <div class="row">
+        <div class="col">
+            <p>
+                <label for="id_embarque_origen">Origen de Embarque:</label>
+                <input type="text" class="form-control" name="embarque_origen" required="" id="id_embarque_origen"
+                {% if pedidos%} value="{{pedidos.embarque_origen}}" {%endif%}>
+            </p>
+        </div>
+        <div class="col">
+            <p>
+                <label for="id_embarque_destino">Destino de Embarque:</label>
+                <input type="text" class="form-control" name="embarque_destino" required="" id="id_embarque_destino"
+                {% if pedidos%} value="{{pedidos.embarque_destino}}" {%endif%}>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <p>
+                <label for="id_embarque_paqueteria">Embarque Paquetería:</label>
+                <input type="text" class="form-control" name="embarque_paqueteria" required="" id="id_embarque_paqueteria"
+                {% if pedidos%} value="{{pedidos.embarque_paqueteria}}" {%endif%}>
+            </p>
+        </div>
+    </div>
+
+    <!-- Linea de separación -->
+    <div class="row">
+        <hr>
+        <div class="text-center" style="background-color: white;">
+            <span class="text-muted">Centro de Trabajo</span>
+        </div>
+        <hr style="border: 2px solid #4d4d4d;">
+    </div>
+    <!-- Fin Linea de separación -->
+
+
+      <div class="row">
+        <div class="col">
+            <p>
+                <label for="id_centro_trabajo">Centro de Trabajo:</label>
+                <select name="centro_trabajo" class="form-control form-select" required="" id="id_centro_trabajo">
+                    {% for centro_trabajo in centro_trabajo %}
+                        <option value="{{ centro_trabajo.id }}" {% if pedidos%}{% if pedidos.centro_trabajo.centro_trabajo == centro_trabajo.centro_trabajo %} selected {%endif%}{%endif%}>{{ centro_trabajo.centro_trabajo }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+        </div>
+        <div class="col">
+            <p>
+                <label for="id_cargo_ct">Cargo CT:</label>
+                <select name="cargo_ct" class="form-control form-select" required="" id="id_cargo_ct">
+                    {% for cargo_ct in cargo_ct %}
+                        <option value="{{ cargo_ct.id }}" {% if pedidos%}{% if pedidos.cargo.cargo == cargo_ct.cargo %} selected {%endif%}{%endif%}>{{ cargo_ct.cargo }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+        </div>
+
+
+    <!-- Linea de separación -->
+    <div class="row">
+        <hr>
+        <div class="text-center" style="background-color: white;">
+            <span class="text-muted">Datos Cotización</span>
+        </div>
+        <hr style="border: 2px solid #4d4d4d;">
+    </div>
+    <!-- Fin Linea de separación -->
+
+      <div class="row">
+        <div class="col">
+            <p>
+                <label for="id_no_cotizacion">No de Cotización:</label>
+                <input type="text" name="no_cotizacion" class="form-control" maxlength="100" required="" id="id_no_cotizacion"
+                {% if pedidos%} value="{{pedidos.no_cotizacion}}" {%endif%}>
+            </p>
+        </div>
+        <div class="col">
+            <p>
+                <label for="id_via_peticion">Vía Petición:</label>
+                <input type="text" name="via_peticion" class="form-control" maxlength="100" required="" id="id_via_peticion"
+                {% if pedidos%} value="{{pedidos.via_peticion}}" {%endif%}>
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <p>
+                    <label for="id_fecha_cotizacion">Fecha Cotización:</label>
+                    <input type="date" class="form-control" name="fecha_cotizacion" required="" id="id_fecha_cotizacion"
+                    {% if pedidos%} value="{{pedidos.fecha_cotizacion|date:'Y-m-d'}}" {%endif%}>
+                </p>
+            </div>
+
+        </div>
+        <!-- Linea de separación -->
+        <div class="row">
+            <hr>
+            <div class="text-center" style="background-color: white;">
+                <span class="text-muted">Artículos</span>
+            </div>
+            <hr style="border: 2px solid #4d4d4d;">
+        </div>
+        <!-- Fin Linea de separación -->
+
+        <div class="row">
+            <table class="table">
+                <thead>
+                    {% comment %} <tr>
+                        <th><label>No. Parte</label></th>
+                        <th><label>Descripción</label></th>
+                        <th><label>Marca</label></th>
+                        <th><label>Componente</label></th>
+                        <th><label>Sistema</label></th>
+                        <th><label>Cantidad</label></th>
+                        <th><label>Unidad de Medida</label></th>
+                        <th><label>Precio Unitario</label></th>
+                        <th><label>Tiempo Entrega</label></th>
+                        <th></th>
+                    </tr> {% endcomment %}
+                </thead>
+                <tbody id="products_container">
+
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="d-flex justify-content-center">
+                <button onclick="add_product_field()" class="btn btn-success text-dark" style="font-size: 20px;" type="button">
+                    +
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label for="id_iva">Iva %:</label>
+                <input type="number" name="iva" class="form-control" required="true" id="id_iva"
+                {% if pedidos%} value="{{pedidos.iva | floatformat:'2u' }}" {%endif%}>
+            </div>
+        </div>
+
+        <!-- Linea de separación -->
+        <div class="row">
+            <hr>
+            <div class="text-center" style="background-color: white;">
+                <span class="text-muted">Solicitante</span>
+            </div>
+            <hr style="border: 2px solid #4d4d4d;">
+        </div>
+        <!-- Fin Linea de separación -->
+        
+        <div class="row">
+            <div class="col">
+                <p>
+                    <label for="id_solicita">Quien Solicita:</label>
+                    <input type="text" name="solicita" class="form-control" maxlength="100" required="" id="id_solicita"
+                    {% if pedidos%} value="{{pedidos.solicita}}" {%endif%}>
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    <label for="id_cargo_solicita">Cargo del Solicitante:</label>
+                    <input type="text" name="cargo_solicita" class="form-control" maxlength="100" required="" id="id_cargo_solicita"
+                    {% if pedidos%} value="{{pedidos.cargo_solicita}}" {%endif%}>
+                </p>
+            </div>
+
+        <!-- Linea de separación -->
+        <div class="row">
+            <hr>
+            <div class="text-center" style="background-color: white;">
+                <span class="text-muted">Observaciones</span>
+            </div>
+            <hr style="border: 2px solid #4d4d4d;">
+        </div>
+        <!-- Fin Linea de separación -->
+        <style>
+            /* Aplicar un estilo específico al textarea */
+            textarea {
+                white-space: nowrap; /* Evitar el ajuste automático de líneas */
+                overflow: auto; /* Agregar barras de desplazamiento si es necesario */
+                resize: none; /* Evitar que el usuario redimensione el textarea */
+            }
+        </style>
+
+        <div class="row">
+            <div class="col">
+                <p>
+                    <label for="id_descripcion">Descripcion:</label>
+                    <textarea name="descripcion" class="form-control" required="true" id="id_descripcion" wrap="off">
+                        {% if pedidos %}
+                            {{ pedidos.descripcion }}
+                        {% endif %}
+                    </textarea>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <p>
+                    <label for="id_observaciones">Observaciones:</label>
+                    <textarea name="observaciones" class="form-control" required="true" id="id_observaciones" wrap="off">
+                        {% if pedidos %}
+                            {{ pedidos.observaciones }}
+                        {% endif %}
+                    </textarea>
+                </p>
+            </div>
+        </div>
+
+
+
+
+  </div>
+
+  <script>
+    var add_product_field = () => {
+        var pc = document.getElementById('products_container');
+        var next_index = pc.childElementCount + 1;
+        var array = document.getElementById('products_container').getElementsByTagName('tr');
+        var last_index = ((array)[array.length - 1]);
+        if (last_index) {
+            var index_ = parseInt(last_index.id.replace("element_", "").replace("_id", ""));
+            next_index = index_ + 1;
+        }
+
+        var newRow = document.createElement('tr');
+        newRow.id = `element_${next_index}_id`;
+        
+        newRow.innerHTML = `
+        <div class="row">
+            <div class="col-3">
+                <label for="id_articulo_${next_index}">No. Parte:</label>
+                <input type="text" name="$$$articulo_${next_index}" class="form-control" required="true" value="">
+            </div>
+            <div class="col-3">
+                <label for="id_descriptions_${next_index}">Descripción:</label>
+                <input type="text" name="$$$descriptions_${next_index}" class="form-control" required="true" value="">
+            </div>
+            <div class="col-3">
+                <label for="id_marca_${next_index}">Marca:</label>
+                <input type="text" name="$$$marca_${next_index}" class="form-control" required="true" value="">
+            </div>
+            <div class="col-3">
+                <label for="id_componente_${next_index}">Componente:</label>
+                <input type="text" name="$$$componente_${next_index}" class="form-control" required="true" value="">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="id_sistemas_${next_index}">Sistema:</label>
+                <select name="$$$sistema_${next_index}" class="form-control form-select" required="" id="id_sistemas">
+                    {% for sistema in sistemas %}
+                        <option value="{{ sistema.id }}" >{{ sistema.sistema }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-2">
+                    <label for="id_quantities_${next_index}">Cantidad:</label>
+                    <input type="number" name="$$$quantities_${next_index}" class="form-control" required="true" value="" min="0">
+            </div>
+            <div class="col-2">
+                    <label for="id_unit_of_measurements_${next_index}">Unidad de Medida:</label>
+                    <input type="text" name="$$$unit_of_measurements_${next_index}" class="form-control" required="true" value="">
+            </div>
+            <div class="col-2">
+                    <label for="id_prices_${next_index}">Precio Unitario:</label>
+                    <input type="number" name="$$$prices_${next_index}" class="form-control" required="true" value="">
+            </div>
+            <div class="col-2">
+                    <label for="id_delivery_times_${next_index}">Tiempo de Entrega:</label>
+                    <input type="text" name="$$$delivery_times_${next_index}" class="form-control" required="true" value="">
+            </div>
+            <div class="col-2">
+                <div onClick="delete_product_field('element_${next_index}_id')">
+                    <button class="btn btn-danger text-white" style="font-size: 12px;">X</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <hr style="height: 3px; color: #007bff; background-color: #007bff; border: none;">
+            </div>
+        </div>
+
+        `;
+
+        pc.appendChild(newRow);
+    };
+
+    var delete_product_field = (data) => {
+        var element = document.getElementById(data);
+        element.parentNode.removeChild(element);
+    }
+</script>
+
+
+{% if pedidos.detalle_pedidos.all %}
+    <script>
+        var pre_add_product_field = (producto) => {
+        var pc = document.getElementById('products_container');
+        var next_index = pc.childElementCount + 1;
+        var array = document.getElementById('products_container').getElementsByTagName('tr');
+        var last_index = ((array)[array.length - 1]);
+        if (last_index) {
+            console.log(last_index.id);
+            var index_ = parseInt(last_index.id.replace("element_", "").replace("_id", ""));
+            next_index = index_ + 1;
+        }
+
+        var newRow = document.createElement('tr');
+        newRow.id = `element_${next_index}_id`;
+        
+        newRow.innerHTML = `
+        <div class="row">
+            
+            <div class="col-3">
+                <label for="id_articulo_${next_index}">No. Parte:</label>
+                <input type="text" name="$$$articulo_${next_index}" class="form-control" required="true" value="${producto.articulo || ''}">
+            </div>
+            <div class="col-3">
+                <label for="id_descriptions_${next_index}">Descripción:</label>
+                <input type="text" name="$$$descriptions_${next_index}" class="form-control" required="true" value="${producto.descripcion || ''}">
+            </div>
+            <div class="col-3">
+                <label for="id_marca_${next_index}">Marca:</label>
+                <input type="text" name="$$$marca_${next_index}" class="form-control" required="true" value="${producto.marca || ''}">
+            </div>
+            <div class="col-3">
+                <label for="id_componente_${next_index}">Componente:</label>
+                <input type="text" name="$$$componente_${next_index}" class="form-control" required="true" value="${producto.componente || ''}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="id_sistemas_${next_index}">Sistema:</label>
+                <select name="$$$sistema_${next_index}" class="form-control form-select" required="">
+                    {% for sistema in sistemas %}
+                        <option value="{{ sistema.id }}">{{ sistema.sistema }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-2">
+                <label for="id_quantities_${next_index}">Cantidad:</label>
+                <input type="number" name="$$$quantities_${next_index}" class="form-control" required="true" value="${producto.cantidad || ''}" min="0">
+            </div>
+            <div class="col-2">
+                <label for="id_unit_of_measurements_${next_index}">Unidad de Medida:</label>
+                <input type="text" name="$$$unit_of_measurements_${next_index}" class="form-control" required="true" value="${producto.unidad_medida || ''}">
+            </div>
+            <div class="col-2">
+                <label for="id_prices_${next_index}">Precio Unitario:</label>
+                <input type="number" name="$$$prices_${next_index}" class="form-control" required="true" value="${producto.precio_unitario || ''}">
+            </div>
+            <div class="col-2">
+                <label for="id_delivery_times_${next_index}">Tiempo de Entrega:</label>
+                <input type="text" name="$$$delivery_times_${next_index}" class="form-control" required="true" value="${producto.tiempo_entrega || ''}">
+            </div>
+            <div class="col-2">
+                <div onClick="delete_product_field('element_${next_index}_id')">
+                    <button class="btn btn-danger text-white" style="font-size: 12px;">X</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <hr style="height: 3px; color: #007bff; background-color: #007bff; border: none;">
+            </div>
+        </div>
+
+        `;
+
+        pc.appendChild(newRow);
+
+        // Obtener el select recién agregado al DOM
+        var selectElement = newRow.querySelector(`select[name="$$$sistema_${next_index}"]`);
+
+        // Buscar la opción con el valor de producto.sistema y establecerla como seleccionada
+        var optionToSelect = selectElement.querySelector(`option[value="${producto.sistema}"]`);
+        if (optionToSelect) {
+            optionToSelect.selected = true;
+
+        };
+
+        };
+    </script>
+
+        {% for producto in pedidos.detalle_pedidos.all %}
+            <script>
+                // Llamar a la función dentro del bucle
+                pre_add_product_field({
+                    articulo: "{{ producto.articulo }}",
+                    descripcion: "{{ producto.descripcion }}",
+                    cantidad: "{{ producto.cantidad }}",
+                    unidad_medida: "{{ producto.unidad_medida }}",
+                    precio_unitario: "{{ producto.precio_unitario | floatformat:'2u'}}",
+                    tiempo_entrega: "{{ producto.tiempo_entrega }}",
+                    marca: "{{ producto.marca }}",
+                    componente: "{{ producto.componente }}",
+                    sistema: "{{ producto.sistema.sistema }}",
+                    sistema_id: "{{ producto.sistema.id }}"
+                });
+            </script>
+        {% endfor %}
+{% endif %}
+
+
+<script>
+
+    var select2utilitie = () => {
+        setTimeout(function () {
+            $('#id_proveedores').select2({
+                placeholder: 'Buscar por proveedor',
+                allowClear: true, // Adds a clear button
+                width: '95%',
+                {%if reload%}
+                    dropdownParent: $("#createPedido")
+                {%endif%}
+            });
+            $('#id_sistemas').select2({
+                placeholder: 'Buscar por sistema',
+                allowClear: true, // Adds a clear button
+                width: '95%',
+                {%if reload%}
+                    dropdownParent: $("#createPedido")
+                {%endif%}
+            });
+            $('#id_centro_trabajo').select2({
+                placeholder: 'Buscar por centro de trabajo',
+                allowClear: true, // Adds a clear button
+                width: '95%',
+                {%if reload%}
+                    dropdownParent: $("#createPedido")
+                {%endif%}
+            });
+            $('#id_cargo_ct').select2({
+                placeholder: 'Buscar por cargo',
+                allowClear: true, // Adds a clear button
+                width: '95%',
+                {%if reload%}
+                    dropdownParent: $("#createPedido")
+                {%endif%}
+            });
+        }, 1000);
+    };
+
+    select2utilitie()
+
+</script>
+
+{%if reload%}
+
+{%endif%}

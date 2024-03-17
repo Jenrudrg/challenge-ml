@@ -1,0 +1,172 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load admin_soft%}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+  {% include 'includes/search_get.html' with get="Ventas" %}
+
+  <div class="row">
+    <div class="col-xl-6 col-md-6 col-sm-12 d-flex">
+      <a class="btn btn-success btn-round m-1 " href="/download_sales/">
+        <i class="fas fa-download"></i> Reporte de Ventas
+      </a>
+    </div>
+  </div>
+
+    <div class="row mt-2">
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-header pb-0 d-flex justify-content-between">
+              <h6>Ventas</h6>
+              
+              
+              <button class="btn btn-primary btn-round" data-bs-toggle="modal" data-bs-target="#modalCreate"
+                      data-bs-target="#modalCreate"
+              >
+                Crear Venta
+            </div>
+
+
+            <div class="card-body px-0 pt-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">UUID</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Fecha</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Fecha Creación</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Usuario Creador</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Detalle</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {% for sale in sales %}
+                    <tr>
+                      <td class="align-middle text-center">
+                          <p class="text-xs font-weight-bold mb-0">{{ sale.uuid }}</p>
+                      </td>
+                      <td class="align-middle text-center">
+                        <p class="text-xs font-weight-bold mb-0">{{ sale.date | date:'d-m-Y' }}</p>
+                      </td>
+                      <td class="align-middle text-center">
+                        <p class="text-xs font-weight-bold mb-0">{{ sale.created_at | date:'d-m-Y' }}</p>
+                      </td>
+                      <td class="align-middle text-center">
+                        <p class="text-xs font-weight-bold mb-0">{{ sale.created_user.username }}</p>
+                      </td>
+                      <td class="align-middle text-center">
+                        <p class="text-xs font-weight-bold mb-0">{{ sale.total }}</p>
+                      </td>
+                      <td class="align-middle d-flex justify-content-center ">
+                        <a class="text-secondary font-weight-bold text-xs"  data-bs-toggle="modal" data-bs-target="#modalSaletDetalle{{sale.id}}"
+                         title="Editar">
+                            <i class="fas fa-eye"></i>
+                        </a>
+
+
+
+                        <!-- Edit Modal -->
+                        <div class="modal fade" id="modalSaletDetalle{{sale.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" 
+                            aria-labelledby="modalSaletDetalle{{sale.id}}Label" aria-hidden="true" style="z-index: 99999;" >
+                            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-dialog">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalSaletDetalle{{sale.id}}Label">Detalle Venta</h5>
+                                    <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">X</button>
+                                </div>
+                                <div class="modal-body">
+                                  {% comment %} Ver productos de la venta {% endcomment %}
+                                  <table class="table align-items-center mb-0">
+                                    <thead>
+                                      <tr>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder">Productos</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder">Cantidad</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder">Precio</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                  {% for product in sale.sale_detail.all %}
+                                  <tr>
+                                    <td class="align-middle text-center">
+                                      <p class="text-xs font-weight-bold mb-0">{{ product.product.name }}</p>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                      <p class="text-xs font-weight-bold mb-0">{{ product.quantity }}</p>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                      <p class="text-xs font-weight-bold mb-0"> {{ product.calculate_total_price }} </p>
+                                  </td>
+                                  {% endfor %}
+                                  <tr>
+                                    <td class="align-middle text-center">
+                                      <p class="text-xs font-weight-bold mb-0">Total</p>
+                                    </td>
+                                    <td></td>
+                                    <td class="align-middle text-center">
+                                      <p class="text-xs font-weight-bold mb-0"> {{ sale.total }} </p>
+                                  </tbody>
+                                </table>
+
+                                   
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+
+                      </td>
+
+                      </td>
+                    </tr> 
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          {% include 'includes/paginator.html' with item_paginator=saleos %}
+        </div>
+      </div>
+
+    <!-- Creator Modal -->
+  <div class="modal fade modal-xl" id="modalCreate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" 
+  aria-labelledby="modalCreateLabel" aria-hidden="true" style="z-index: 99999;" >
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCreateLabel">Nuevo Venta</h5>
+          <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">X</button>
+        </div>
+        <div class="modal-body">
+            <form action="" method="post" id="crear-Salet-form-id" >
+            {% csrf_token %}
+            <input type="date" name="date" class="form-control mb-4" required="">
+            {% include 'includes/add_products.html' with products=products stock=stock %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+
+
+
+</script>
+{% endblock scripts %}

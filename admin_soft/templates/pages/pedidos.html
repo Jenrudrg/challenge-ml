@@ -1,0 +1,168 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+      
+      <div class="col-xl-3 col-md-6 col-sm-12">
+        <form class="" action="" method="GET" >
+            <div class="input-group" style="padding-bottom: 0px">
+                <input type="text" class="form-control bg-light border-0 small" 
+                
+                style="height: 38px;
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+                " 
+                
+                placeholder="Buscar Pedido..." aria-label="Search" aria-describedby="basic-addon2" name="search" type="text">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit" 
+                    
+                    style="height: 38px;
+                    border-top-left-radius: 0;
+                    border-bottom-left-radius: 0;"
+                    
+                    >
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="row">
+      <div class="col-xl-6 col-md-6 col-sm-12 d-flex">
+        <a class="btn btn-success btn-round m-1 " href="/descargar_xlsx/?prods=true">
+          <i class="fas fa-download"></i> Reporte de Articulos
+        </a>
+
+        <a class="btn btn-success btn-round m-1 " href="/descargar_xlsx/?prods=false">
+          <i class="fas fa-download"></i> Reporte de Pedidos
+        </a>
+      </div>
+      
+    </div>
+
+    </div>
+    <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0 d-flex justify-content-between">
+          <h6>Pedidos</h6>
+          <button class="btn btn-primary btn-round" data-bs-toggle="modal" data-bs-target="#createPedido"
+                  data-bs-target="#createPedido"
+          >
+            Crear Pedido
+          </button>
+
+
+        </div>
+        <div class="card-body px-0 pt-0 pb-2">
+          <div class="table-responsive p-0">
+            <table class="table align-items-center mb-0">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Fecha</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Folio</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Centro de Trabajo</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Unidad CT</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Descripción</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Proveedor</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Importe MN</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Importe USD</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Estatus</th>
+                  <th class="text-secondary opacity-7"></th>
+                  <th class="text-secondary opacity-7"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for pedido in pedidos_ %}
+                <tr>
+                    <td>
+                        <p class="text-xs font-weight-bold mb-0">{{ pedido.fecha }}</p>
+                      </td>
+                  <td>
+                    <p class="text-xs font-weight-bold mb-0">{{ pedido.pedidos_no }}</p>
+                  </td>
+                  <td class="align-middle text-center">
+                    <p class="text-xs font-weight-bold mb-0">{{ pedido.centro_trabajo.centro_trabajo }}</p>
+                  </td>
+                  <td class="align-middle text-center">
+                    <p class="text-xs font-weight-bold mb-0">{{ pedido.cargo.cargo }}</p>
+                  </td>
+                  <td class="align-middle text-center">
+                    <p class="text-xs font-weight-bold mb-0">{{ pedido.descripcion }}</p>
+                  </td>
+                  <td class="align-middle text-center">
+                    <p class="text-xs font-weight-bold mb-0">{{ pedido.proveedores.razon_social }}</p>
+                  </td>
+                  <td class="align-middle text-center">
+                    <p class="text-xs font-weight-bold mb-0">{{ pedido.total }}</p>
+                  </td>
+                  <td class="align-middle text-center">
+                    <p class="text-xs font-weight-bold mb-0">{{ pedido.usd }}</p>
+                  </td>
+                  <td class="align-middle text-center">
+                    {% if pedido.estatus == 'Pendiente Autorización' %}
+                      <span class="badge text-dark text-xs font-weight-bold mb-0"> <p class="text-xs font-weight-bold mb-0">  {{ pedido.estatus }} </p></span>
+                    {% elif pedido.estatus == 'Pendiente Pago' %}
+                      <span class="badge text-bg-success"><p class="text-xs font-weight-bold mb-0">  {{ pedido.estatus }} </p></span>
+                    {% elif pedido.estatus == 'Pagado' or pedido.estatus == 'Cancelado' %}
+                      <span class="badge text-bg-danger text-xs font-weight-bold mb-0"><p class="text-xs font-weight-bold mb-0">  {{ pedido.estatus }} </p></span>
+                    {% endif %}
+                  </td>
+                  <td class="align-middle">
+                    <a class="text-secondary font-weight-bold text-xs" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Detalles"
+                        href="{{pedido.get_absolute_url}}">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                  </td>
+                  <td class="align-middle">
+                    <a class="text-secondary font-weight-bold text-xs" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar PDF"
+                    href="/descargar_pdf?id={{pedido.id}}">
+                        <i class="fas fa-download"></i>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% include 'includes/paginator.html' with item_paginator=pedidos_ %}
+
+  <!-- Modal -->
+  <div class="modal fade" id="createPedido" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" 
+      aria-labelledby="createPedidoLabel" aria-hidden="true" style="z-index: 99999;" >
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createPedidoLabel">Nuevo Pedido</h5>
+          <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">X</button>
+        </div>
+        <div class="modal-body">
+            <form action="" method="post">
+            {% csrf_token %}
+            {% include 'forms/pedidos_form.html' with pedido=pedido centro_trabajo=centro_trabajo cargo_ct=cargo_ct proveedores=proveedores reload=True contratos=contratos%}
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock content %}
+<!-- Specific JS goes HERE --> 
+{% block scripts %}
+
+{% endblock scripts %}
+ 

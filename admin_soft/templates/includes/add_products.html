@@ -1,0 +1,126 @@
+<div id="products_container">
+</div>
+<div class="row">
+    <div class="d-flex justify-content-center">
+        <button onclick="add_product_field()" class="btn btn-success text-dark" style="font-size: 20px;" type="button">
+            + Agregar Producto
+        </button>
+    </div>
+</div>
+
+<script>
+    var add_product_field = () => {
+        var pc = document.getElementById('products_container');
+        var next_index = pc.childElementCount + 1;
+
+        var newRow = document.createElement('div');
+        newRow.className = 'row';
+        newRow.id = `element_${next_index}_id`;
+
+        {% if purchase %}
+
+        newRow.innerHTML = `
+                <div class="col-2">
+                    <label class="mt-4">${next_index}</label>
+                </div>
+                <div class="col-3">
+                    <label for="id_products_${next_index}">Producto:</label>
+                    <select name="product_${next_index}_id" class="form-control form-select" 
+                        required="" id="id_products_${next_index}">
+                        {% for product in products %}
+                            <option value="{{ product.id }}">{{ product.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-3">
+                    <label for="id_quantity_${next_index}">Cantidad:</label>
+                    <input type="number" name="product_${next_index}_quantity" class="form-control" required="true" value="">
+                </div>
+                <div class="col-2">
+                    <label for="id_price_${next_index}">Precio:</label>
+                    <input type="number" name="product_${next_index}_price" class="form-control" required="true" value="">
+                </div>
+                <div class="col-2">
+                    <label></label>
+                    <div onClick="delete_product_field('element_${next_index}_id')" class="mt-1">
+                        <button class="btn btn-danger text-white" style="font-size: 12px;">X</button>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <hr style="height: 3px; color: #007bff; background-color: #007bff; border: none;">
+                </div>
+        `;
+
+        {%else%}
+            newRow.innerHTML = `
+                    <div class="col-2">
+                        <label class="mt-4">${next_index}</label>
+                    </div>
+                    <div class="col-4">
+                        <label for="id_products_${next_index}">Producto:</label>
+                        <select name="product_${next_index}_id" class="form-control form-select" 
+                            required="" id="id_products_${next_index}">
+                            {% for product in products %}
+                                <option value="{{ product.id }}">{{ product.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label for="id_quantity_${next_index}">Cantidad:</label>
+                        <input type="number" name="product_${next_index}_quantity" class="form-control" required="true" value=""
+                        id="id_quantity_${next_index}" {%if stock%} onchange="validate_stock(${next_index})" {%endif%}>
+                    </div>
+                    <div class="col-2">
+                        <label></label>
+                        <div onClick="delete_product_field('element_${next_index}_id')" class="mt-1">
+                            <button class="btn btn-danger text-white" style="font-size: 12px;">X</button>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <hr style="height: 3px; color: #007bff; background-color: #007bff; border: none;">
+                    </div>
+            `;
+        {%endif%}
+
+        pc.appendChild(newRow);
+        select2utilitie(`id_products_${next_index}`);
+    };
+
+    var delete_product_field = (data) => {
+        var element = document.getElementById(data);
+        element.parentNode.removeChild(element);
+    };
+
+
+    var select2utilitie = (select_id) => {
+        setTimeout(function () {
+            $(`#${select_id}`).select2({
+                placeholder: 'Buscar por producto',
+                allowClear: true, // Adds a clear button
+                width: '95%',
+                dropdownParent: $("#modalCreate")
+            });
+        }, 10);
+    };
+
+</script>
+
+{%if stock%}
+<script>
+    var stock = {{ stock | safe }};
+
+    var validate_stock = (id_input) => {
+        var messageElement = document.getElementById(`message${id_input}`);
+        var inputElement = document.getElementById(`id_quantity_${id_input}`);
+        var productId = document.getElementById(`id_products_${id_input}`).value;
+        var inputValue = parseInt(inputElement.value);
+        
+        if (stock[productId]){
+            if (stock[productId].stock && inputValue > stock[productId].stock) {
+                alert('La cantidad ingresada es mayor que el stock disponible');
+                inputElement.value = '';
+            }
+        }
+    };
+</script>
+{%endif%}
